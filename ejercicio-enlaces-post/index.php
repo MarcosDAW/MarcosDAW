@@ -3,7 +3,7 @@
         <title>URL con números</title>
     </head>
     <body>
- 
+        <h1>prueba</h1>
         
         <?php
 
