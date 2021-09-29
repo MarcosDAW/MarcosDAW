@@ -1,0 +1,7 @@
+hacer base de datos
+hacer una consulta
+recorrer todo con bucle
+y lo que salga mostrarlo en pantalla
+
+del articulo sacar
+titulo, texto, fecha, autor e imagen 
