@@ -30,6 +30,8 @@
         echo "no hay datos ingresados";
     }
     */
+    echo'<button title="loguear">Log In</button>';
+
     if(isset($_POST['usuario']) && isset($_POST['contraseña'])){
         $usuario = $_POST['usuario'];
         $contraseña = $_POST['contraseña'];
@@ -39,6 +41,7 @@
             if($row = mysqli_fetch_row($result)){
                 $sql = "SELECT titulo,texto,autor,fecha,imagen FROM articulos";
                 $result = mysqli_query($mysql,$sql);
+                echo '<button title="agregar_articulo">Articulo Nuevo</button>';
                 foreach($result as $rows){
                     echo '<h1>'.$rows['titulo'].'</h1>';
                     echo '<div>';
@@ -49,6 +52,7 @@
                     echo '<hr>';
                     echo '</div>';
                 }  
+                
             }else{
                 echo "usuario incorrecto";
             }
@@ -75,6 +79,9 @@
         <input type="text" name="fecha" placeholder="00-00-00 00:00:00">
         <br>
         <input type="submit" name="insertar" placeholder="Insertar">
+    </form>
+    <form action="index.php" method="POST">
+        
     </form>
 
 </body>
