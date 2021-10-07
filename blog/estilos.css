@@ -1,12 +1,29 @@
-div{
-    background: pink;
-    display: flex;
+body{
+    background-color: steelblue;
 }
-h1{
-    background:red;
+div{
+    background-color: aquamarine;
+    display: flex;
+    border-radius:5px 5px 5px 5px; box-shadow: 5px 5px;
+    flex-wrap:wrap-reverse;
+}
+h2{
     color: white;
     text-align: center;
 }
 img{
-    position: center;
+    
+    float: left;
+}
+a{
+    background-color:slategray;
+    color: snow;
+    display: inline;
+    border: 1px solid black;
+    margin: 5px;
+}
+p{
+    align-items: auto;
+    padding-left:15px;
+
 }
