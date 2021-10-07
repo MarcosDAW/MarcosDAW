@@ -1,0 +1,42 @@
+body{
+    background-color: steelblue;
+    align-items: center;
+    padding: 20px;
+    margin: auto;
+}
+div{
+    background-color: aquamarine;
+    display: flex;
+    border-radius:5px 5px 5px 5px; box-shadow: 5px 5px;
+}
+h2{
+    color: white;
+    text-align: center;
+}
+img{
+    
+    float: left;
+}
+a{
+    background-color:slategray;
+    color: snow;
+    border: 1px solid black;
+    margin: 5px;
+    justify-content: end;
+}
+p{
+    align-items: auto;
+    padding-left:15px;
+
+}
+@media screen and (max-width: 980px){
+    body{
+        width: 90%;
+    }
+    body{
+        width: 60%;
+    }
+    #barra_lateral{
+        width:30%;
+    }
+}
