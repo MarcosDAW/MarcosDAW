@@ -1,11 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-    <?php 
-        $mysql = mysqli_connect("localhost", "root", "", "blog1");
-        if($mysql->connect_error){
-            echo "Fallo al conectar a MySQL";
-        }
-    ?>    
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="estilos.css">
@@ -15,18 +9,12 @@
 </head>
 <body>
     <?php
-if( isset($_GET['editar']) ){
-    
-            echo '<form action="form.php" method="POST">';
-            echo '<input type="text" name="titulo" placeholder="Titulo">';
-            echo '<br>';
-            echo '<input type="text" name="texto" placeholder="Texto">';
-            echo '<input type="text" name="imagen" placeholder="Imagen">';
-            echo '<br>';
-            echo '<input type="submit" name="cambiar">';
-            echo '</form>';
-            
-        }
-    ?>
+    echo "<form action='index.php?editar=".$_GET['editar']."' method='POST'>";
+    echo '<input type="text" name="titulo" placeholder="Nuevo Titulo">';
+    echo '<input type="text" name="texto" placeholder="Nuevo Texto">';
+    echo '<input type="submit">';
+    echo "</form>";
+    echo '<a href="index.php">Volver al Blog</a>';
+    ?>    
 </body>
 </html>

@@ -5,3 +5,7 @@ y lo que salga mostrarlo en pantalla
 
 del articulo sacar
 titulo, texto, fecha, autor e imagen 
+
+-------------------------------------
+
+si el usuario esta iniciado debajo del articulo agregar formulario para agregar comentarios.

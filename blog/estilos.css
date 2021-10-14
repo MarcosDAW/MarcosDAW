@@ -1,11 +1,13 @@
 body{
     background-color: steelblue;
+    align-items: center;
+    padding: 20px;
+    margin: auto;
 }
 div{
     background-color: aquamarine;
     display: flex;
     border-radius:5px 5px 5px 5px; box-shadow: 5px 5px;
-    flex-wrap:wrap-reverse;
 }
 h2{
     color: white;
@@ -18,12 +20,11 @@ img{
 a{
     background-color:slategray;
     color: snow;
-    display: inline;
     border: 1px solid black;
     margin: 5px;
+    justify-content: end;
 }
 p{
     align-items: auto;
     padding-left:15px;
-
 }

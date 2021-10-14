@@ -12,7 +12,7 @@
         $_SESSION['loged']=false;
     }
 //------------Conectar BBDD-----------------    
-    $mysql = mysqli_connect("localhost", "root", "", "blog");
+    $mysql = mysqli_connect("localhost", "root", "", "blog1");
     if($mysql->connect_error){
         echo "Fallo al conectar a MySQL";
     }
@@ -35,33 +35,49 @@
     }
 // borramos articulo
     if( $_SESSION['loged'] && isset($_GET['eliminar']) ){
-        $sql = ("DELETE FROM articulos WHERE id_articulo='".$_GET['eliminar']."'");
+        $sql = ("DELETE FROM articulos WHERE id_articulos='".$_GET['eliminar']."'");
         $result = mysqli_query($mysql,$sql);
     }  
-/*------------------------------EDITAR------------------------------------------
+//------------------------------EDITAR------------------------------------------------------
+
     if( $_SESSION['loged'] && isset($_GET['editar']) ){
-        $sql = ("UPDATE articulos SET titulo ='".$_GET['titulo']."' ,
-         texto ='".$_GET['texto']."' , imagen='".$_GET['imagen']."' , autor='".$_GET['autor']."'");
-        $result = mysqli_query($mysql,$sql);
+        $titulo = $_POST['titulo'];
+        $texto = $_POST['texto'];
+        $sql = ("UPDATE articulos SET titulo ='".$titulo."' ,
+         texto = '".$texto."' WHERE id_articulos = '".$_GET['editar']."'");
+        if($result = mysqli_query($mysql,$sql)){
+            ?>
+            <script>
+                alert("EDITADO CORRECTAMENTE");
+            </script>
+            <?php
+        }else{
+            ?>
+            <script>
+                alert("NO SE HA EDITADO");
+            </script>
+            <?php
+        }
     }
-*/
-//-----------------------------------------------------------------------------
+ 
+//------------------------------------------------------------------------------------------
     // cargamos articulos
     if ( $result = $mysql->query("SELECT * FROM articulos") )  
     while($row=$result->fetch_assoc()){
         $articles[] = $row;
     }
-?>    
+?>     
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="estilos.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>Blog-actualizado</title>
 </head>
 <body>
     <?php
     if($_SESSION['loged']){
+        echo " <br>";
         echo "Bienvenido  [".$_SESSION['usuario']."]";
         echo "<a href='index.php?logout'>Cerrar sesión</a>";
     }else{
@@ -80,6 +96,7 @@
         }
     }
     if(count($articles)){
+        
         foreach($articles as $article){
             echo "<h2>".$article['titulo']."</h2>";
             echo "<div>";
@@ -87,20 +104,26 @@
             echo "<p>".$article['texto']."</p>";
             echo "<p>Autor: ".$article['autor']." - el día ".$article['fecha'];
             if($_SESSION['loged'] && $_SESSION['usuario'] == $article['autor']){
-                echo "<a href='index.php?eliminar=".$article['id_articulo']."'>Eliminar</a> ";
+                //----------------------------BOTON_EDITAR y BORRAR---------------------------//
+                echo "<a href='index.php?eliminar'>ELIMINAR</a> ";
+                echo "<br>";
+                echo "<a href='form.php?editar=".$article['id_articulos']."'>EDITAR</a> ";
             }
-            /*-------------------------------EDITAR----------------------------------
-            if($_SESSION['loged'] && $_SESSION['usuario'] == $article['autor']){
-                echo "<a href='index.php?editar=".$article['id_articulo']."'>Editar</a> ";
-            }
-            */
-            //-----------------------------------------------------------------------
             echo "</p>";
             echo "</div>";
         }
-        
-        
     }
+    /*
+    agregar un boton para agregar articulos
+    agregar boton comentar articulo
+    poder comentar un comentario
+    designar roles de usuarios- 
+    agregar el rol a la base de datos
+    cuando inicia sesion guardar el $_SESSION['rol']
+    rol = 2 --> Admin - puede borrar articulos y agregar articulos
+    rol = 1 --> Usuario - maneja solo comentarios
+    agregar boton me gusta en articulos y solo pueden dar 1 me gusta por articulo
+    */
     ?>
 </body>
 </html>
