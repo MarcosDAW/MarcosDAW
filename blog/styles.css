@@ -3,15 +3,21 @@ body{
     align-items: center;
     padding: 20px;
     margin: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0 20% 0 20%;
 }
-div{
+table{
     background-color: aquamarine;
     display: flex;
     border-radius:5px 5px 5px 5px; box-shadow: 5px 5px;
 }
-h2{
+div{
+    border: 1px solid black;
+}
+h1{
     color: white;
     text-align: center;
+    margin-bottom: 7px;
 }
 img{
     
@@ -27,4 +33,7 @@ a{
 p{
     align-items: auto;
     padding-left:15px;
+}
+.art input{
+    margin: auto;
 }

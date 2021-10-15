@@ -12,7 +12,7 @@
         $_SESSION['loged']=false;
     }
 //------------Conectar BBDD-----------------    
-    $mysql = mysqli_connect("localhost", "root", "", "blog1");
+    $mysql = mysqli_connect("localhost", "root", "", "blog");
     if($mysql->connect_error){
         echo "Fallo al conectar a MySQL";
     }
@@ -31,11 +31,12 @@
                    $_SESSION['id'] = $row['id'];
                }else $error = "Error en la contraseña";  
            }else $error="El usuario no existe";
+           //echo <a href="crearArticulo.php">
        }
     }
 // borramos articulo
     if( $_SESSION['loged'] && isset($_GET['eliminar']) ){
-        $sql = ("DELETE FROM articulos WHERE id_articulos='".$_GET['eliminar']."'");
+        $sql = ("DELETE FROM articulos WHERE id_articulo ='".$_GET['eliminar']."'");
         $result = mysqli_query($mysql,$sql);
     }  
 //------------------------------EDITAR------------------------------------------------------
@@ -44,7 +45,7 @@
         $titulo = $_POST['titulo'];
         $texto = $_POST['texto'];
         $sql = ("UPDATE articulos SET titulo ='".$titulo."' ,
-         texto = '".$texto."' WHERE id_articulos = '".$_GET['editar']."'");
+         texto = '".$texto."' WHERE id_articulo = '".$_GET['editar']."'");
         if($result = mysqli_query($mysql,$sql)){
             ?>
             <script>
@@ -59,17 +60,43 @@
             <?php
         }
     }
- 
+//-------------------------BOTON AGREGAR ARTICULO-------------------------------------------- 
+
+        
+    if( $_SESSION['loged'] && isset($_GET['agregar']) ){
+        $titulo1 = $_POST['titulo'];
+        $texto1 = $_POST['texto'];
+        $sql = ("INSERT INTO articulos (titulo,texto,autor,imagen) VALUES(
+            '".$titulo1."',
+            '".$texto1."',
+            '".$_SESSION['usuario']."',
+            'imagen".$_SESSION['id'].".png'
+            )");
+        if($result = mysqli_query($mysql,$sql)){
+            ?>
+            <script>
+                alert("AGREGADO CORRECTAMENTE");
+            </script>
+            <?php
+        }else{
+            ?>
+            <script>
+                alert("NO SE HA AGREGADO");
+            </script>
+            <?php
+        }
+    }
+
 //------------------------------------------------------------------------------------------
     // cargamos articulos
-    if ( $result = $mysql->query("SELECT * FROM articulos") )  
+    if ( $result = $mysql->query("SELECT * FROM articulos ORDER BY fecha DESC") )  
     while($row=$result->fetch_assoc()){
         $articles[] = $row;
     }
 ?>     
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="styles.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog-actualizado</title>
@@ -80,6 +107,7 @@
         echo " <br>";
         echo "Bienvenido  [".$_SESSION['usuario']."]";
         echo "<a href='index.php?logout'>Cerrar sesión</a>";
+        echo "<a href='crearArticulo.php?agregar=".$_SESSION['usuario']."'>Agregar articulo</a>";
     }else{
     ?>
         <h3>Inicio Sesión</h3>
@@ -98,19 +126,27 @@
     if(count($articles)){
         
         foreach($articles as $article){
-            echo "<h2>".$article['titulo']."</h2>";
-            echo "<div>";
-            echo "<img src='".$article['imagen']."' width=150px />";
-            echo "<p>".$article['texto']."</p>";
-            echo "<p>Autor: ".$article['autor']." - el día ".$article['fecha'];
+            echo "<h1>".$article['titulo']."</h1>";
+            echo "<table>"."
+                <tr>"."
+                <div>"."
+                <th>
+                    <img src='".$article['imagen']."' width=150px />
+                    <h2>".$article['autor']."</h2>
+                </th>"."
+                <th><p>".$article['texto']."</p></th>"."
+                <th><h2>Fecha   ".$article['fecha']."</h2></th>"."
+                </div>"."
+                </tr>";
             if($_SESSION['loged'] && $_SESSION['usuario'] == $article['autor']){
                 //----------------------------BOTON_EDITAR y BORRAR---------------------------//
-                echo "<a href='index.php?eliminar'>ELIMINAR</a> ";
-                echo "<br>";
-                echo "<a href='form.php?editar=".$article['id_articulos']."'>EDITAR</a> ";
+                echo "<tr>"."
+                    <th></th>"."
+                    <th><a href='index.php?eliminar=".$article['id_articulo']."'>ELIMINAR</a></th>"."
+                    <th><a href='form.php?editar=".$article['id_articulo']."'>EDITAR</a></th>"."
+                </tr>";
             }
-            echo "</p>";
-            echo "</div>";
+            echo "</table>";
         }
     }
     /*
