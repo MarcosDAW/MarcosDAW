@@ -29,7 +29,7 @@
                    $_SESSION['loged']=true;
                    $_SESSION['usuario'] = $row['usuario'];
                    $_SESSION['id'] = $row['id'];
-               }else $error = "Error en la contraseña";  
+               }else $error = "Error en la contraseña";
            }else $error="El usuario no existe";
            //echo <a href="crearArticulo.php">
        }
@@ -62,15 +62,15 @@
     }
 //-------------------------BOTON AGREGAR ARTICULO-------------------------------------------- 
 
-        
     if( $_SESSION['loged'] && isset($_GET['agregar']) ){
         $titulo1 = $_POST['titulo'];
         $texto1 = $_POST['texto'];
-        $sql = ("INSERT INTO articulos (titulo,texto,autor,imagen) VALUES(
+        $sql = ("INSERT INTO articulos (titulo,texto,autor,imagen,fecha) VALUES(
             '".$titulo1."',
             '".$texto1."',
             '".$_SESSION['usuario']."',
-            'imagen".$_SESSION['id'].".png'
+            'imagen".$_SESSION['id'].".png',
+            '".date('y-m-d')."'
             )");
         if($result = mysqli_query($mysql,$sql)){
             ?>
