@@ -1,0 +1,44 @@
+
+body{
+    background: #FAFAD2;
+}
+.enlaces{
+    display: flex;
+    justify-content:center;
+}
+.peliculas{
+    min-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 20px 20px 20px 20px ;
+    background:#E0FFFF ;
+}
+.me-gusta,.no-gusta{
+    display: flex;
+    align-items: center;
+}
+.cartel{
+    display: flex;
+    justify-content: center;
+}
+.descripcion{
+    max-width: 300px;
+    justify-content: flex-start;
+    margin-top: 10%;
+}
+.sesion{
+    margin: auto;
+    justify-content: space-between;
+}
+@media (max-width:432px){
+    .peliculas{
+        min-width: 150px;
+        flex-direction: column;
+        background:chartreuse;
+    }
+}
+
+
+
