@@ -36,7 +36,7 @@
         //-----------------------INICIAR SESIÓN------------------------
         if(isset($_GET['loged'])){
             if( isset($_POST['usuario']) && isset($_POST['contraseña']) ){
-                $sql = ("SELECT usuario,contraseña FROM usuarios WHERE usuario ='".$_POST['usuario']."'");
+                $sql = ("SELECT usuario,contraseña,rol,id FROM usuarios WHERE usuario ='".$_POST['usuario']."'");
                 $result = mysqli_query($miConexion,$sql);
                 if($row = $result->fetch_assoc()){
                     if($row['usuario'] == $_POST['usuario'] ){
@@ -44,7 +44,8 @@
                            $_SESSION['loged'] = true;
                            $_SESSION['usuario'] = $row['usuario'];
                            $_SESSION['contraseña'] = $row['contraseña'];
-                           //$_SESSION['id'] = $row['id'];------SALE ERROR----
+                           $_SESSION['rol'] = $row['rol'];
+                           $_SESSION1['id'] = $row['id'];
                        }else echo "Contraseña Incorrecta";
                     }
                 }else{
@@ -80,11 +81,11 @@
 
             $consulta = ("SELECT * FROM usuarios WHERE usuario = '".$_POST['usuario']."'");
             if($resultado = mysqli_query($miConexion,$consulta)){
-                $row = mysqli_num_rows($resultado);
-                if($row==0){
+                
+                if($row = mysqli_num_rows($resultado)>0){
                     echo "el usuario ya existe";
-                    mysqli_query($miConexion,$sql);
                 }else{
+                    mysqli_query($miConexion,$sql);
                     echo "registro correcto";
                 }
             }
@@ -93,6 +94,23 @@
         if($result = mysqli_query($miConexion,$sql)){
             while($row = $result->fetch_assoc()){
                 $pelis[] = $row;
+            }
+        }
+        //---------------------AÑADIR PELICULA-----------------------
+        if($_SESSION['loged'] && $_SESSION['rol']=='admin'){
+            echo "<a href='añadir.php'>Añadir Pelicula</a>";
+        }
+        if($_SESSION['loged'] && isset($_GET['add'])){
+            $sql = ("INSERT INTO peliculas(titulo,año,director,actor,cartel) VALUES 
+            ('".$_POST['titulo']."',
+            '".$_POST['año']."',
+            '".$_POST['director']."',
+            '".$_POST['actor']."',
+            '".$_POST['cartel']."')");
+            if($result = mysqli_query($miConexion,$sql)){
+                echo "<h1>Agregada correctamente</h1>";
+            }else{
+                echo "<h1>Error al agregar</h1>";
             }
         }
         //---------------------MOSTRAR PELICULAS---------------------
@@ -110,42 +128,46 @@
                             <h3>Año: ".$pelicula['año']."</h3>"."
                             <h3>Director: ".$pelicula['director']."</h3>"."
                             <h3>Actor: ".$pelicula['actor']."</h3>"."
-                        </div>"."
+                        </div>";
 
-                        <div class='me-gusta'>"."
-                            <h3></h3>"."
-                            <a href='index.php?megusta=".$pelicula['id_pelicula']."'>"."<img src='megusta.png' width='60px' >"."</a>"."
-                            
-                        </div>"."
+                        if($_SESSION['loged'] && $_SESSION['rol']=='usuario'){
+                            echo    
+                            "<div class='me-gusta'>"."
+                                <h3></h3>"."
+                                <a href='index.php?megusta=".$pelicula['id_pelicula']."'>"."<img src='megusta.png' width='60px' >"."</a>"."
+                            </div>"."
 
-                        <div class='no-gusta'>"."
-                            <h3></h3>"."
-                            <a href='index.php?nogusta=".$pelicula['id_pelicula']."'>"."<img src='nogusta.png' width='60px' >"."</a>"."
-                        </div>"."
-                    </div>";
+                            <div class='no-gusta'>"."
+                                <h3></h3>"."
+                                <a href='index.php?nogusta=".$pelicula['id_pelicula']."'>"."<img src='nogusta.png' width='60px' >"."</a>"."
+                            </div>";
+                        }
+                    echo "</div>";
             }
         }
-        if($_SESSION['loged'] && isset($_GET['megusta']) || isset($_GET['nogusta'])){
-            $sql1 = ("INSERT INTO peliculas (megusta) VALUES (1) WHERE id_pelicula = '".$_GET['megusta']."'");
-            $sql2= ("INSERT INTO peliculas (nogusta) VALUES (1) WHERE id_pelicula = '".$_GET['nogusta']."'");
-            if(isset($_GET['megusta'])){
-                if($result1 = mysqli_query($miConexion,$sql1)){
-                    if($row1 = $result1->fetch_assoc()){
-                        $megusta = $row1['megusta'];
-                        echo "<h3>$megusta</h3>";
-                    }
-                } 
-            }else if(isset($_GET['nogusta'])){
-                if($result2 = mysqli_query($miConexion,$sql2)){
-                    if($row2 = $result2->fetch_assoc()){
-                        $nogusta = $row2['nogusta'];
-                        echo "<h3>$nogusta</h3>";
+        if($_SESSION['loged'] && $_SESSION['rol']=="usuario"){
+            if(isset($_GET['megusta']) || isset($_GET['nogusta'])){
+                $sql1 = ("INSERT INTO peliculas (megusta) VALUES ('1') WHERE id_pelicula = '".$_GET['megusta']."'");
+                $sql2= ("INSERT INTO peliculas (nogusta) VALUES ('1') WHERE id_pelicula = '".$_GET['nogusta']."'");
+                if(isset($_GET['megusta'])){
+                    if($result1 = mysqli_query($miConexion,$sql1)){
+                        if($row1 = $result1->fetch_assoc()){
+                            $megusta = $row1['megusta'];
+                            echo "<h3>'".$megusta."'</h3>";
+                        }
+                    } 
+                }else if(isset($_GET['nogusta'])){
+                    if($result2 = mysqli_query($miConexion,$sql2)){
+                        if($row2 = $result2->fetch_assoc()){
+                            $nogusta = $row2['nogusta'];
+                            echo "<h3>$nogusta</h3>";
+                        }
                     }
                 }
-                
-                
             }
+            
         }
+        
             
     ?>    
 </body>
