@@ -13,7 +13,7 @@
         <div class="art">
             <input type="text" name="usuario" placeholder="Usuario">
             <br>
-            <input type="text" name="contraseña" placeholder="Contraseña">
+            <input type="text" name="password" placeholder="Contraseña">
             <br>
             <input type="submit">
             <br>
