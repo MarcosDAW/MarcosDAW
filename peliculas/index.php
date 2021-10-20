@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -55,27 +56,17 @@
         }
 
         if($_SESSION['loged'] && $_SESSION['rol']=="usuario"){
-            if(isset($_GET['megusta']) || isset($_GET['nogusta'])){
-                $sql1 = ("INSERT INTO peliculas (megusta) VALUES ('1') WHERE id_pelicula = '".$_GET['megusta']."'");
-                $sql2 = ("INSERT INTO peliculas (nogusta) VALUES ('1') WHERE id_pelicula = '".$_GET['nogusta']."'");
                 if(isset($_GET['megusta'])){
-                    if($result1 = mysqli_query($miConexion,$sql1)){
-                        if($row1 = $result1->fetch_assoc()){
-                            $megusta = $row1['megusta'];
-                            echo "<h3>'".$megusta."'</h3>";
-                        }
+                    if($result = $miConexion->query("UPDATE peliculas SET megusta = megusta+1 WHERE id_pelicula = '".$_GET['megusta']."'")){
+                        $resultado = $miConexion->query("SELECT * FROM peliculas");
                     } 
                 }else if(isset($_GET['nogusta'])){
-                    if($result2 = mysqli_query($miConexion,$sql2)){
-                        if($row2 = $result2->fetch_assoc()){
-                            $nogusta = $row2['nogusta'];
-                            echo "<h3>$nogusta</h3>";
-                        }
+                    if($result = $miConexion->query("UPDATE peliculas SET nogusta = nogusta+1 WHERE id_pelicula = '".$_GET['nogusta']."'")){
+                        $resultado = $miConexion->query("SELECT * FROM peliculas");
                     }
                 }
-            }
-            
         }
+
 
         //--------------------CREAR REGISTRO-------------------------
         if( isset( $_GET[ 'registro' ] ) ){
@@ -91,21 +82,9 @@
                 }else{
                     mysqli_query($miConexion,$sql);
                     echo "registro correcto";
-                    $valores = $valor->fetch_assoc();
-                    //$miConexion->query("INSERT INTO valoraciones (iduser) VALUES ('".$sql.']."')");
-                    //como sacar el id ingresado dl usuario
                 }
             }
         }
-        //-----------------------Cargar iduser----------------------
-            if($result = $miConexion->query("SELECT id FROM usuarios")){
-                $contador=1;
-                while($row = $result->fetch_assoc()){
-                    $miConexion->query("UPDATE valoraciones SET iduser = '".$row['id']."' WHERE id = '".$contador."'");
-                    $contador++;
-                }
-                
-            }
         //---------------------AÑADIR PELICULA-----------------------
         if($_SESSION['loged'] && $_SESSION['rol']=='admin'){
             echo "<a href='add.php'>Añadir Pelicula</a>";
@@ -119,9 +98,6 @@
             '".$_POST['cartel']."')");
             if($result = mysqli_query($miConexion,$sql)){
                 echo "<p>Agregada correctamente</p>";
-                if(isset($pelis)){
-                    $result = $miConexion->query("INSERT INTO valoraciones (idpeli) VALUES ('".$pelis['id_pelicula']."')");
-                }
             }else{
                 echo "<p>Error al agregar</p>";
             }
@@ -138,11 +114,12 @@
         }
     ?>
 </head>
+
 <body>
     <!-------------------------ENLACES----------------------------->
-        <div class='enlaces'>
-            <div class='sesion'>
-                <?php
+    <div class='enlaces'>
+        <div class='sesion'>
+            <?php
                 if($_SESSION['loged']){
                     echo "<a href='index.php?logout'>Cerrar Sesión</a>";
                     echo "Bienvenido ".$_SESSION['usuario'];
@@ -153,10 +130,11 @@
                     <br>"."
                     <a href='registro.php'>Registrarse</a>";
                 } 
-                ?>    
-            </div>
+                ?>
         </div>
+    </div>
     <?php
+
         //---------------------MOSTRAR PELICULAS---------------------
         if(isset($pelis)){
             if(count($pelis)){
@@ -176,16 +154,19 @@
                             </div>";
     
                             if($_SESSION['loged'] && $_SESSION['rol']=='usuario'){
-                                echo    
-                                "<div class='me-gusta'>"."
-                                    <h3></h3>"."
-                                    <a href='index.php?megusta=".$pelicula['id_pelicula']."'>"."<img src='megusta.png' width='60px' >"."</a>"."
-                                </div>"."
+
+                                $result = $miConexion->query("SELECT * FROM peliculas WHERE id_pelicula = '".$pelicula['id_pelicula']."'");
+                                $row = $result->fetch_assoc();
+
+                                echo "<div class='me-gusta'>";
+                                echo    "<a href='index.php?megusta=".$pelicula['id_pelicula']."'>"."<img src='megusta.png' width='60px' >"."</a>";
+                                echo    $row['megusta'];     
+                                echo    "</div>";
     
-                                <div class='no-gusta'>"."
-                                    <h3></h3>"."
-                                    <a href='index.php?nogusta=".$pelicula['id_pelicula']."'>"."<img src='nogusta.png' width='60px' >"."</a>"."
-                                </div>";
+                                echo "<div class='no-gusta'>";
+                                echo    "<a href='index.php?nogusta=".$pelicula['id_pelicula']."'>"."<img src='nogusta.png' width='60px' >"."</a>";
+                                echo    $row['nogusta'];
+                                echo "</div>";
                             }
                         echo "</div>";
                 }
@@ -194,6 +175,7 @@
             echo "<div>"."<p>No hay peliculas</p>"."</div>";
         }
         
-    ?>    
+    ?>
 </body>
+
 </html>
